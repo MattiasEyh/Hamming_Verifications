@@ -1,3 +1,5 @@
+package Metier;
+
 public class MessageHamming {
 
     private final String MESSAGE;

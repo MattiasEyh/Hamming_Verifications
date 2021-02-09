@@ -1,11 +1,17 @@
-import java.util.ArrayList;
+package Metier;
+
+import Controleur.Controller;
+import Vue.Conteneur;
 
 public class HammingVerification {
     private String baseCode;
     private String hammingCode;
 
+    private Controller ctrl;
 
-    public HammingVerification(){
+
+    public HammingVerification(Controller ctrl){
+        this.ctrl = ctrl;
         baseCode = null;
         hammingCode = null;
     }
@@ -68,7 +74,8 @@ public class HammingVerification {
     }
 
 
-    public String ConvertToHammingCode(String code, int nbBitsControle){
+    public String ConvertToHammingCode(String code){
+        int nbBitsControle = getBitDeControle(code);
         String[] tabTmp = new String[code.length()+nbBitsControle];
 
         int cptMsg = 0;
@@ -107,16 +114,7 @@ public class HammingVerification {
         return messageHamming;
     }
 
-
-
-    public static void main(String[] args) {
-
-        HammingVerification hm = new HammingVerification();
-        MessageHamming mh = new MessageHamming("101101111011011");
-
-        //System.out.println(hm.ConversionBitsDeControle(hm.VerificationMessage(mh)));
-
-        System.out.println(hm.ConvertToHammingCode("1011", 3));
-
+    private int getBitDeControle(String code){
+        return 3;
     }
 }
