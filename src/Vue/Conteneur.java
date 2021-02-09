@@ -3,96 +3,99 @@ package Vue;
 import Controleur.Controller;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Conteneur extends JFrame implements ActionListener {
-
-    private JPanel pnlHaut;
-    private JPanel pnlCentre;
-    private JPanel pnlBas;
-
-    private ButtonGroup btGroup;
-    private JRadioButton rbValidation;
-    private JRadioButton rbConstruction;
-
-    private JLabel lblMessageIn;
-    private JLabel lblMessageOut;
-
-    private JTextField txtMessageIn;
-    private JTextField txtMessageout;
-
-    private JTextArea txtLogs;
-
-    private JButton valider;
-
-    private Controller ctrl;
+public class Conteneur extends JFrame {
+	
+	private Controller ctrl;
+	private JPanel zoneSaisie;
+	private JTextField saisie;
+	private JLabel labelSaisie;
+	
+	private JTabbedPane fonctionnalites;
+	private JPanel foncVerification; 
+	private JPanel foncCalculCodeH;
+	
+	private JLabel logVerification;
+	private JLabel resultatVerification;
+	
+	private JLabel logCalculCodeH;
+	private JLabel resultatCalculCodeH;
 
     public Conteneur(Controller ctrl){
-        super("Hamming - Traitements de bits");
-
+        super("TP3 : Le code de Hamming");
         this.ctrl = ctrl;
-
         init();
-
         this.pack();
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
     private void init(){
-        this.pnlHaut   = new JPanel();
-        this.pnlCentre = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        this.pnlBas    = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    	zoneSaisie = new JPanel();
+    	labelSaisie = new JLabel("Entrez une suite binaire :");
+    	zoneSaisie.add(labelSaisie);
+    	saisie = new JTextField(20);
+    	saisie.setToolTipText("Entrez uniquement des '0' et des '1'");
+    	saisie.getDocument().addDocumentListener(new DocumentListener() {
+        	
+        	private void maj() {
+        	       ctrl.setSuiteBinaire(saisie.getText());
+        	}
+        	
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				maj();
+			}
 
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				maj();
+			}
 
-        this.btGroup = new ButtonGroup();
-        this.rbValidation   = new JRadioButton("Validation");
-        this.rbConstruction = new JRadioButton("Construction");
-
-        this.lblMessageIn  = new JLabel ("Message en entrÃ©e : ");
-        this.lblMessageOut = new JLabel ( "Message en sortie : ");
-
-        this.txtMessageIn   = new JTextField(10);
-        this.txtMessageout  = new JTextField(10);
-
-        this.txtMessageout.setEditable(false);
-
-        this.txtLogs = new JTextArea("LOGS :",3, 25);
-
-        this.valider = new JButton("Valider");
-        this.valider.addActionListener(this);
-
-        this.btGroup.add(rbValidation);
-        this.btGroup.add(rbConstruction);
-
-        this.pnlHaut.add(rbValidation);
-        this.pnlHaut.add(rbConstruction);
-
-        this.pnlCentre.add(lblMessageIn);
-        this.pnlCentre.add(txtMessageIn);
-        this.pnlCentre.add(valider);
-
-        this.pnlBas.add(lblMessageOut);
-        this.pnlBas.add(txtMessageout);
-
-        this.add(pnlHaut, BorderLayout.NORTH);
-        this.add(pnlCentre, BorderLayout.CENTER);
-        this.add(pnlBas, BorderLayout.SOUTH);
-
-        this.add(txtLogs, BorderLayout.EAST);
-
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				maj();
+			}
+        	
+        });
+    	((AbstractDocument) saisie.getDocument()).setDocumentFilter(new BinaryDocumentFilter());
+    	zoneSaisie.add(saisie);
+    	add(zoneSaisie,BorderLayout.NORTH);
+    	
+    	fonctionnalites = new JTabbedPane();
+    	
+    	foncVerification = new JPanel();
+    	foncVerification.setLayout(new BoxLayout(foncVerification, BoxLayout.Y_AXIS));
+    	logVerification = new JLabel("logs");
+    	foncVerification.add(logVerification);
+    	resultatVerification = new JLabel("rien");
+    	foncVerification.add(resultatVerification);
+    	fonctionnalites.add("vérification",foncVerification);
+    	
+    	foncCalculCodeH = new JPanel();
+    	foncCalculCodeH.setLayout(new BoxLayout(foncCalculCodeH, BoxLayout.Y_AXIS));
+    	logCalculCodeH = new JLabel("logs");
+    	foncCalculCodeH.add(logCalculCodeH);
+    	resultatCalculCodeH = new JLabel("rien");
+    	foncCalculCodeH.add(resultatCalculCodeH);
+    	fonctionnalites.add("Calcul du code d'Hamming",foncCalculCodeH);	
+    	
+    	add(fonctionnalites, BorderLayout.CENTER);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+	public void maj() {
+		resultatVerification.setText(ctrl.getResultatVerification());
+		logVerification.setText(ctrl.getLogVerification());
+		resultatCalculCodeH.setText(ctrl.getResultatCalculCodeH());
+		logCalculCodeH.setText(ctrl.getLogCalculCodeH());
+	}
 
-        if (this.txtMessageIn.getText() != "") {
-            if (e.getSource() == this.valider && this.rbConstruction.isSelected()) {
-                this.txtMessageout.setText(this.ctrl.getMessageOut(this.txtMessageIn.getText()));
-            }
-
-
-        }
-    }
 }
