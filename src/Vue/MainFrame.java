@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Conteneur extends JFrame {
+public class MainFrame extends JFrame {
 	
 	private Controller ctrl;
 	private JPanel zoneSaisie;
@@ -22,13 +22,13 @@ public class Conteneur extends JFrame {
 	private JPanel foncVerification; 
 	private JPanel foncCalculCodeH;
 	
-	private JLabel logVerification;
+	private JTextArea logVerification;
 	private JLabel resultatVerification;
 	
-	private JLabel logCalculCodeH;
+	private JTextArea logCalculCodeH;
 	private JLabel resultatCalculCodeH;
 
-    public Conteneur(Controller ctrl){
+    public MainFrame(Controller ctrl){
         super("TP3 : Le code de Hamming");
         this.ctrl = ctrl;
         init();
@@ -72,20 +72,35 @@ public class Conteneur extends JFrame {
     	
     	fonctionnalites = new JTabbedPane();
     	
-    	foncVerification = new JPanel();
-    	foncVerification.setLayout(new BoxLayout(foncVerification, BoxLayout.Y_AXIS));
-    	logVerification = new JLabel("logs");
-    	foncVerification.add(logVerification);
-    	resultatVerification = new JLabel("rien");
-    	foncVerification.add(resultatVerification);
+    	Dimension  logD = new Dimension(300,190);
+    	foncVerification = new JPanel(new BorderLayout());
+    	foncVerification.setBorder(BorderFactory.createLineBorder(Color.black));
+    	logVerification = new JTextArea();
+    	logVerification.setEditable(false);
+    	logVerification.setWrapStyleWord(true);
+    	logVerification.setSize(logD);
+    	logVerification.setMinimumSize(logD);
+    	logVerification.setPreferredSize(logD);
+    	logVerification.setBorder(BorderFactory.createLineBorder(Color.black));
+    	foncVerification.add(logVerification, BorderLayout.CENTER);
+    	resultatVerification = new JLabel(" ");
+    	resultatVerification.setHorizontalAlignment(SwingConstants.CENTER);
+    	foncVerification.add(resultatVerification, BorderLayout.SOUTH);
     	fonctionnalites.add("vérification",foncVerification);
     	
-    	foncCalculCodeH = new JPanel();
-    	foncCalculCodeH.setLayout(new BoxLayout(foncCalculCodeH, BoxLayout.Y_AXIS));
-    	logCalculCodeH = new JLabel("logs");
-    	foncCalculCodeH.add(logCalculCodeH);
-    	resultatCalculCodeH = new JLabel("rien");
-    	foncCalculCodeH.add(resultatCalculCodeH);
+    	foncCalculCodeH = new JPanel(new BorderLayout());
+    	foncCalculCodeH.setBorder(BorderFactory.createLineBorder(Color.black));
+    	logCalculCodeH = new JTextArea();
+    	logCalculCodeH.setEditable(false);
+    	logCalculCodeH.setWrapStyleWord(true);
+    	logCalculCodeH.setSize(logD);
+    	logCalculCodeH.setMinimumSize(logD);
+    	logCalculCodeH.setPreferredSize(logD);
+    	logCalculCodeH.setBorder(BorderFactory.createLineBorder(Color.black));
+    	foncCalculCodeH.add(logCalculCodeH, BorderLayout.CENTER);
+    	resultatCalculCodeH = new JLabel(" ");
+    	resultatCalculCodeH.setHorizontalAlignment(SwingConstants.CENTER);
+    	foncCalculCodeH.add(resultatCalculCodeH, BorderLayout.SOUTH);
     	fonctionnalites.add("Calcul du code d'Hamming",foncCalculCodeH);	
     	
     	add(fonctionnalites, BorderLayout.CENTER);

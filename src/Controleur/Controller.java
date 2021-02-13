@@ -3,12 +3,12 @@ package Controleur;
 import javax.swing.SwingUtilities;
 
 import Metier.MessageHamming;
-import Vue.Conteneur;
+import Vue.MainFrame;
 
 public class Controller {
 	
 	private String suiteBinaire;
-    private Conteneur vue;
+    private MainFrame vue;
     private MessageHamming metierVerification;
     private MessageHamming metierCalculCodeH;
 
@@ -20,14 +20,14 @@ public class Controller {
     }
     
     public Controller(){
-        this.vue = new Conteneur(this);
+        this.vue = new MainFrame(this);
         suiteBinaire = "";
         this.metierVerification = new MessageHamming(suiteBinaire);
         this.metierCalculCodeH = MessageHamming.getHammingCodeFor(suiteBinaire);
     }
     
     public String getResultatCalculCodeH(){
-    	return (metierCalculCodeH.hasPadding() ? "Après ajout de bits à 0 : ": "") + metierCalculCodeH.toString();
+    	return "Code d'Hamming " + (metierCalculCodeH.hasPadding() ? "(après padding) : ": ":") + metierCalculCodeH.toString();
     }
     
     public String getResultatVerification(){
