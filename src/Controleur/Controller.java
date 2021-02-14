@@ -27,7 +27,7 @@ public class Controller {
     }
     
     public String getResultatCalculCodeH(){
-    	return "Code d'Hamming " + (metierCalculCodeH.hasPadding() ? "(après padding) : ": ":") + metierCalculCodeH.toString();
+    	return (metierCalculCodeH.hasPadding() ? "Après ajout de bits à 0 : ": "") + metierCalculCodeH.toString();
     }
     
     public String getResultatVerification(){
@@ -37,13 +37,13 @@ public class Controller {
     		return "La suite saisie n'est pas un code de Hamming";
     	}
     }
-    
+
     public String getLogVerification(){
-       return "";
+       return metierVerification.getLogVerification();
     }
 
     public String getLogCalculCodeH(){
-        return "";
+        return metierCalculCodeH.getLogCalcul();
      }
 
     public static void main(String[] args) {

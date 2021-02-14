@@ -86,7 +86,7 @@ public class MainFrame extends JFrame {
     	resultatVerification = new JLabel(" ");
     	resultatVerification.setHorizontalAlignment(SwingConstants.CENTER);
     	foncVerification.add(resultatVerification, BorderLayout.SOUTH);
-    	fonctionnalites.add("vérification",foncVerification);
+    	fonctionnalites.add("v?rification",foncVerification);
     	
     	foncCalculCodeH = new JPanel(new BorderLayout());
     	foncCalculCodeH.setBorder(BorderFactory.createLineBorder(Color.black));

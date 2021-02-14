@@ -3,3 +3,6 @@
 .idea/*
 *.iml
 /bin/
+.classpath
+.project
+Hamming_Verifications/*
