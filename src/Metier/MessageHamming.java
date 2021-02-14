@@ -293,23 +293,23 @@ public class MessageHamming {
         boolean[] HCodeBits = new boolean[sentMessageBits.length + n];
         // Construction d'un code de Hamming avec tout les bits de controle � 0
         int iSM = sentMessageBits.length - 1; // index for sent message
-		logCalcul += "Code d'Hamming : ";
-		String pos = "Positions       :      ";
+		logCalcul += "Code d'Hamming :\t";
+		String pos = "Positions       :    \t";
 
-		String bitContr = "Bits de controle : ";
+		String bitContr = "Bits de controle : \t";
 		int cptbitContr = 0;
         for (int cpt = HCodeBits.length - 1; cpt >= 0; cpt--){
             if (isPowerOfTwo(HCodeBits.length - cpt)){
-            	logCalcul += "   _   |";
-            	bitContr += "   C" + ++cptbitContr + "   ";
+            	logCalcul += "   ..   |";
+            	bitContr += String.format("%3dC", ++cptbitContr) + "   ";
             	HCodeBits[cpt] = false;
             } else {
             	HCodeBits[cpt] = sentMessageBits[iSM];
             	logCalcul+= HCodeBits[cpt] ? "   1   |" : "   0   |";
-				bitContr += "    ";
+				bitContr += "         ";
             	iSM--;
             }
-            pos += String.format("%4d ", cpt ) + "  |";
+            pos += cpt > 9 ? " " + String.format("%2d ", cpt ) + "  |" : String.format("%4d ", cpt ) + "  |";
         }
         logCalcul += "\n" + pos  + "\n" + bitContr;
         //Fin construction d'un code de Hamming avec tout les bits de controle � 0
