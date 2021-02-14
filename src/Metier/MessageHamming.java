@@ -88,8 +88,16 @@ public class MessageHamming {
 	 * @param message
 	 */
     public MessageHamming(String message){
-    	this.logVerification ="";
         this.bits = fromStringToBits(message);
+        int bitWidth = (int) (Math.log10(message.length()) + 1);
+    	this.logVerification ="Message recu : |";
+        for (int cpt=0; cpt < message.length(); cpt ++){
+			this.logVerification += String.format("%" + bitWidth + "s", message.charAt(cpt)) + "|";
+		}
+		this.logVerification += "\nPosition     : |";
+		for (int cpt=message.length(); cpt-1 >= 0; cpt--){
+			this.logVerification += String.format("%" + bitWidth + "d", cpt) + "|";
+		}
         // Initialisation de isHammingCode et nbControlBits
         int taille = bits.length; // taille = 2^n - 1 ?
     	taille++; // taille = 2^n ?
@@ -101,15 +109,8 @@ public class MessageHamming {
         while (taille != 1 && verif) {
             if (taille % 2 != 0) {
                 verif = false;
-                this.logVerification += "ECHEC\nMot recu :\t";
-				for (int cpt=0; cpt < message.length(); cpt ++){
-					this.logVerification += "  " + message.charAt(cpt) + "  |";
-				}
-				this.logVerification += "\nPosition : \t";
-				for (int cpt=message.length(); cpt-1 >= 0; cpt--){
-					this.logVerification += "  " + cpt + "  |";
-				}
-				this.logVerification += "\n\nTaille : " + message.length() + " n'est pas de la forme 2^n - 1";
+                this.logVerification += "\nECHEC\n";
+                this.logVerification += "Taille : " + message.length() + " n'est pas de la forme 2^n - 1";
             }
             else{
                 n++;
@@ -194,20 +195,34 @@ public class MessageHamming {
 	private static boolean[] getReceivedControlBits(MessageHamming message){
 	    int motif = 1;
 	    boolean[] bitsDeControles = new boolean[message.getNbControlBits()];
-	    String messageFinal = "";
-	    for(int i = message.getNbControlBits()-1; i >= 0; i--){
+	    message.logVerification += "\n";
+	    String receivedControlWord = "";
+	    String receivedControlWordBits = "";
+	    for(int i = message.getNbControlBits() - 1; i >= 0; i--){
 	        //bitsDeControles[i] = false;
 	        int parcoursCase = 0;
+	        message.logVerification += "\nC'" + (message.getNbControlBits() - i - 1) + " =";
 	        while (parcoursCase< message.getTaille()){
 	            for (int j = 0; j<motif; j++){
-	                bitsDeControles[i] = bitsDeControles[i] ^ message.getBit(parcoursCase);
+	            	if(parcoursCase != 0)
+	            		message.logVerification += " + bit" + (message.getTaille() - parcoursCase);
+	            	else 
+	            	message.logVerification += " bit" + (message.getTaille() - parcoursCase);
+	                bitsDeControles[i] ^= message.getBit(parcoursCase);
 	                parcoursCase++;
 	            }
 	            parcoursCase += motif;
 	        }
 	        motif *= 2;
+	        receivedControlWord += "C'" + i;
+	        message.logVerification += " = " + (bitsDeControles[i] ? "1" : "0");
 	    }
-	   return bitsDeControles;
+	    for(int i = 0; i <  message.getNbControlBits(); i++){
+	    	receivedControlWordBits += bitsDeControles[i] ? "1" : "0";
+	    }
+	    if(receivedControlWord.length()!=0)
+	    	message.logVerification += "\n\n" + receivedControlWord + " = " + receivedControlWordBits;
+	    return bitsDeControles;
 	}
 
 	/**
