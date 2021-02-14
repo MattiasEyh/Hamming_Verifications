@@ -5,14 +5,38 @@ import javax.swing.SwingUtilities;
 import Metier.MessageHamming;
 import Vue.MainFrame;
 
+/**
+ * Controlleur du programme.
+ *
+ * Permet de faire le lien entre la vue (MainFrame) et les metiers
+ * (MessageHamming).
+ */
+
 public class Controller {
-	
+
+    /**
+     * Message reçu
+     */
 	private String suiteBinaire;
+
+    /**
+     * Vue du programme.
+     */
     private MainFrame vue;
+
+    /**
+     * MessageHamming lie a la verification.
+     */
     private MessageHamming metierVerification;
+
+    /**
+     * MessageHamming lie au Calcul.
+     */
     private MessageHamming metierCalculCodeH;
 
-    
+    /**
+     * Permet de mettre a jours l'ihm.
+     */
     private void maj() {
 		metierVerification = new MessageHamming(suiteBinaire);
 		metierCalculCodeH = MessageHamming.getHammingCodeFor(suiteBinaire);

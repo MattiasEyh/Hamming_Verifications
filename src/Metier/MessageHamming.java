@@ -2,6 +2,13 @@ package Metier;
 
 import java.util.stream.Stream;
 
+/**
+ * Classe MessageHamming
+ * Cette classe constitue le message de Hamming en general.
+ *
+ * Elle permet tous les traitements et verifications sur la chaine pricipale.
+ */
+
 public class MessageHamming {
 
 	/**
@@ -28,15 +35,40 @@ public class MessageHamming {
 	 * mot constitue des bits de controle de reception
 	 */
     private final boolean[] receivedControlBits;
- 	// isCorrect : indique si this.bits est un mot de hamming sans erreurs si this.isHammingCode
+
+	/**
+	 * indique si this.bits est un mot de hamming sans erreurs si this.isHammingCode
+	 */
     private final boolean isCorrect;
-    // hasPadding : indique si le message initial a ete complete d'une suite de bits � 0 pour avoir une taille valide
+
+	/**
+	 * indique si le message initial a ete complete d'une suite de bits � 0 pour avoir une taille valide
+	 */
     private boolean hasPadding;
 
-    private String logVerification;
+	/**
+	 * Logs de vérification à afficher dans l'ihm
+	 */
+	private String logVerification;
+
+	/**
+	 * Logs de calcul à afficher dans l'ihm
+	 */
     private String logCalcul;
     
-    // Utilis� pour la construction d'un code de hamming
+    //
+
+	/** Constructeur de MessageHamming
+	 * Utilise pour la construction d'un code de hamming
+	 * @param bits
+	 * @param isHammingCode
+	 * @param nbControlBits
+	 * @param controlBits
+	 * @param receivedControlBits
+	 * @param isCorrect
+	 * @param hasPadding
+	 * @param logCalcul
+	 */
     private MessageHamming(boolean[] bits, boolean isHammingCode, int nbControlBits, boolean[] controlBits, 
     		boolean[] receivedControlBits, boolean isCorrect, boolean hasPadding, String logCalcul) {
     	this.bits = bits;
@@ -49,8 +81,12 @@ public class MessageHamming {
     	this.logCalcul = logCalcul;
     	this.logVerification = "";
     }
-    
-    // Utilis� pour la v�rification d'un message
+
+	/**
+	 * Constructeur de MessageHamming
+	 * Utilise pour la verification d'un message
+	 * @param message
+	 */
     public MessageHamming(String message){
         this.bits = fromStringToBits(message);
         // Initialisation de isHammingCode et nbControlBits
@@ -84,28 +120,53 @@ public class MessageHamming {
         }
         hasPadding = false;
     }
-    
-    public boolean[] getMessage() {
+
+	/**
+	 * Getter pour recuperer le message.
+	 * @return
+	 */
+	public boolean[] getMessage() {
         return bits;
     }
-    
-    public boolean[] getReceivedControlBits() {
+
+	/**
+	 * Getter afin de renvoyer les bits de controle reçus.
+	 * @return
+	 */
+	public boolean[] getReceivedControlBits() {
     	return receivedControlBits;
     }
 
-    public int getNbControlBits() {
+	/**
+	 * Permet de retourner les bits de contrôles
+	 * @return
+	 */
+	public int getNbControlBits() {
         return nbControlBits;
     }
 
-    public int getTaille(){
+	/**
+	 * Getter afin de retourner la taille du message
+	 * @return
+	 */
+	public int getTaille(){
         return getMessage().length;
     }
 
-    public boolean getBit(int i){
+	/**
+	 * Getter permettant de retourner un bit a l'indice i.
+	 * @param i
+	 * @return
+	 */
+	public boolean getBit(int i){
     	 return getMessage()[i];
     }
 
-    @Override
+	/**
+	 * ToString de la classe MessageHamming
+	 * @return
+	 */
+	@Override
     public String toString() {
         String s = "";
     	for(int i = 0; i < bits.length; i++) {
@@ -114,8 +175,12 @@ public class MessageHamming {
         return s;
     }
 
-	// Renvoie le mot qui correspond aux bits de controle de reception de message
-	// A. E. : message.isHammingCode
+	/**
+	 * Renvoie le mot qui correspond aux bits de controle de reception de message
+	 * A. E. : message.isHammingCode
+	 * @param message
+	 * @return
+	 */
 	private static boolean[] getReceivedControlBits(MessageHamming message){
 	    int motif = 1;
 	    boolean[] bitsDeControles = new boolean[message.getNbControlBits()];
@@ -134,9 +199,13 @@ public class MessageHamming {
 	    }
 	   return bitsDeControles;
 	}
-	
-	// Renvoie le sous-mot de message.bits qui correspond aux bits de controle
-	// A. E. : message.isHammingCode
+
+	/**
+	 * Renvoie le sous-mot de message.bits qui correspond aux bits de controle
+	 * A. E. : message.isHammingCode
+	 * @param message
+	 * @return
+	 */
 	private static boolean[] getControlBits(MessageHamming message) {
 		int nbControlBits = message.getNbControlBits();
 		boolean[] controlBits = new boolean[nbControlBits];
@@ -152,8 +221,14 @@ public class MessageHamming {
 		return bits;
 	}
 
-	// V�rifie qu'un message de Hamming est valide (les bits de controle de reception sont tous � 0)
-	// A. E. : message.isHammingCode
+	//
+
+	/**
+	 * Verifie qu'un message de Hamming est valide (les bits de controle de reception sont tous a 0)
+	 * A. E. : message.isHammingCode
+	 * @param message
+	 * @return
+	 */
 	private static boolean isCorrect(MessageHamming message) {
 		boolean[] ReceivedControlBits = message.getReceivedControlBits();
 		for(int i = 0; i < ReceivedControlBits.length; i++) {
@@ -163,8 +238,12 @@ public class MessageHamming {
 		return true;
 	}
 
-	// Converti un message binaire sous forme de chaine de carateres en message sous forme de tableau de booleens
-	// A. E. : message ne contient que des '0' et des '1'
+	/**
+	 * Converti un message binaire sous forme de chaine de carateres en message sous forme de tableau de booleens
+	 * A. E. : message ne contient que des '0' et des '1'
+	 * @param message
+	 * @return
+	 */
 	private static boolean[] fromStringToBits(String message) {
 		boolean[] bits = new boolean[message.length()];
 		for(int i = 0; i < message.length(); i++) {
@@ -172,9 +251,13 @@ public class MessageHamming {
 		}
 		return bits;
 	}
-	
-	// Renvoie un MessageHamming correspondant au code de hamming pour sentMessage
-	// Si sentMessage n'a pas pas une taille en (2^n - n - 1), une suite de 0 lui est adjoint (padding)
+
+	/**
+	 * Renvoie un MessageHamming correspondant au code de hamming pour sentMessage
+	 * Si sentMessage n'a pas pas une taille en (2^n - n - 1), une suite de 0 lui est adjoint (padding)
+	 * @param sentMessage
+	 * @return
+	 */
 	public static MessageHamming getHammingCodeFor(String sentMessage) {
 		String logCalcul = "Message à transmettre : " + sentMessage + "\n";
 		// Verification de la necessite d'un padding
@@ -263,20 +346,37 @@ public class MessageHamming {
 
 		return new MessageHamming(HCodeBits, true, n, controlBits, receivedControlBits, true, needPadding, logCalcul);
 	}
-	
+
+	/**
+	 * Retourne si le nombre entree en parametre est une puissance de deux.
+	 * @param nb
+	 * @return
+	 */
     private static boolean isPowerOfTwo(int nb){
         return (nb != 0) && ((nb & (nb - 1)) == 0 );
     }
 
+	/**
+	 * Getter de l'attribut isCorrect.
+	 * @return
+	 */
 	public boolean isCorrect() {
 		return isCorrect;
 	}
-	
+
+	/**
+	 * Getter de l'attribut isHammingCode;
+	 * @return
+	 */
 	public boolean isHammingCode() {
 		return isHammingCode;
 	}
-	
-	// A. E.: !this.isCorrect
+
+	/**
+	 * Retourne la position de l'erreur pour la verification
+	 * A. E.: !this.isCorrect
+	 * @return
+	 */
 	public int getPositionErreur() {
 		int twoPowI = 1;
 		int errorPosition = 0;
@@ -287,13 +387,26 @@ public class MessageHamming {
 		return errorPosition;
 	}
 
+	/**
+	 * Getter de l'attribut hasPadding.
+	 * @return
+	 */
 	public boolean hasPadding() {
 		return hasPadding;
 	}
 
+	/**
+	 * Getter des logs de verification
+	 * @return
+	 */
 	public String getLogVerification(){
     	return this.logVerification;
 	}
+
+	/**
+	 * Getter des logs de calcul.
+	 * @return
+	 */
 	public String getLogCalcul(){
 		return this.logCalcul;
 	}
