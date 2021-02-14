@@ -76,6 +76,7 @@ public class MainFrame extends JFrame {
     	foncVerification = new JPanel(new BorderLayout());
     	foncVerification.setBorder(BorderFactory.createLineBorder(Color.black));
     	logVerification = new JTextArea();
+    	logVerification.setFont(new Font("monospaced", Font.PLAIN, 12));
     	logVerification.setEditable(false);
     	logVerification.setWrapStyleWord(true);
     	logVerification.setSize(logD);
@@ -91,6 +92,7 @@ public class MainFrame extends JFrame {
     	foncCalculCodeH = new JPanel(new BorderLayout());
     	foncCalculCodeH.setBorder(BorderFactory.createLineBorder(Color.black));
     	logCalculCodeH = new JTextArea();
+    	logCalculCodeH.setFont(new Font("monospaced", Font.PLAIN, 12));
     	logCalculCodeH.setEditable(false);
     	logCalculCodeH.setWrapStyleWord(true);
     	logCalculCodeH.setSize(logD);

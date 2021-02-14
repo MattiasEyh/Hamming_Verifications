@@ -285,6 +285,8 @@ public class MessageHamming {
 		// Ajout d'un padding si besoin
 		if(needPadding) {
 			sentMessage = Stream.generate(()->"0").limit(padding).reduce((a,b) -> a + b).get() + sentMessage;
+			logCalcul += "le message a une taille de " + taille + " (pas de la forme 2^n - n - 1)\n" + 
+					"Ajout d'un pagging de " + (Un - taille) + " bits.";
 		}
 		// Fin ajout padding
 
@@ -293,25 +295,27 @@ public class MessageHamming {
         boolean[] HCodeBits = new boolean[sentMessageBits.length + n];
         // Construction d'un code de Hamming avec tout les bits de controle � 0
         int iSM = sentMessageBits.length - 1; // index for sent message
-		logCalcul += "Code d'Hamming :\t";
-		String pos = "Positions       :    \t";
-
-		String bitContr = "Bits de controle : \t";
+        String codeH = "";
+		String pos = "";
+		String bitContr = "";
+		int bitWidth = (int) Math.log10(HCodeBits.length) + 1;
 		int cptbitContr = 0;
         for (int cpt = HCodeBits.length - 1; cpt >= 0; cpt--){
             if (isPowerOfTwo(HCodeBits.length - cpt)){
-            	logCalcul += "   ..   |";
-            	bitContr += String.format("%3dC", ++cptbitContr) + "   ";
+            	codeH = "|" + String.format("%"+ bitWidth + "s", "_") + codeH;
+            	bitContr = "|" + String.format("%" + bitWidth + "d", cptbitContr++) + bitContr;
             	HCodeBits[cpt] = false;
             } else {
             	HCodeBits[cpt] = sentMessageBits[iSM];
-            	logCalcul+= HCodeBits[cpt] ? "   1   |" : "   0   |";
-				bitContr += "         ";
+            	codeH = (HCodeBits[cpt] ? ("|" + String.format("%"+ bitWidth + "s", "1")) : ("|" + String.format("%"+ bitWidth + "s", "0"))) + codeH;
+				bitContr = "|" + String.format("%"+ bitWidth + "s", "") + bitContr;
             	iSM--;
             }
-            pos += cpt > 9 ? " " + String.format("%2d ", cpt ) + "  |" : String.format("%4d ", cpt ) + "  |";
+            pos += "|" +  String.format("%"+ bitWidth +"d", cpt + 1 );
         }
-        logCalcul += "\n" + pos  + "\n" + bitContr;
+        logCalcul += "\nCode d'Hamming  :" + codeH + "|";
+        logCalcul += "\nPositions       :" + pos + "|";
+        logCalcul += "\nBits de controle:" + bitContr + "|";
         //Fin construction d'un code de Hamming avec tout les bits de controle � 0
         
         // Correction des bits de controle et construction du mot des bits de controle
@@ -321,14 +325,15 @@ public class MessageHamming {
         // On parcours les n bits de controle Ci
 		logCalcul += "\n\n";
         for(int i = n - 1; i >= 0; i--){
-        	logCalcul += "C" + i + " ";
+        	logCalcul += "C" + (n - 1 - i) + " ";
             boolean parity = false;
             // On parcours les bits de contr�le de parit� Ci en partant du dernier
             int indexParityBit = 0;
             while(indexParityBit < HCodeBits.length){
             	// on prend en compte 'pattern' bits 
                 for (int cpt3 = 0; cpt3 < pattern; cpt3++){
-					logCalcul += " + bit" + indexParityBit;
+                	if(indexCi != indexParityBit )
+                		logCalcul += " + bit" + (HCodeBits.length - (indexParityBit));
                 	parity ^= HCodeBits[indexParityBit++];
                 }
                 // on saute 'pattern' bits
@@ -338,7 +343,7 @@ public class MessageHamming {
             HCodeBits[indexCi] = parity;
             pattern *= 2;
             indexCi = HCodeBits.length - 1 - (pattern - 1);
-			logCalcul += "\n";
+			logCalcul += " = 0 => C" + (n - 1 - i) + " = " + (parity ? "1" : "0") + " \n";
         }
         // Fin Correction des bits de controle 	
         boolean[] receivedControlBits = new boolean[n]; // par construction le code est correct
