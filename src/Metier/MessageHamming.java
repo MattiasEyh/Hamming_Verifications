@@ -88,6 +88,7 @@ public class MessageHamming {
 	 * @param message
 	 */
     public MessageHamming(String message){
+    	this.logVerification ="";
         this.bits = fromStringToBits(message);
         // Initialisation de isHammingCode et nbControlBits
         int taille = bits.length; // taille = 2^n - 1 ?
@@ -100,6 +101,15 @@ public class MessageHamming {
         while (taille != 1 && verif) {
             if (taille % 2 != 0) {
                 verif = false;
+                this.logVerification += "ECHEC\nMot recu :\t";
+				for (int cpt=0; cpt < message.length(); cpt ++){
+					this.logVerification += "  " + message.charAt(cpt) + "  |";
+				}
+				this.logVerification += "\nPosition : \t";
+				for (int cpt=message.length(); cpt-1 >= 0; cpt--){
+					this.logVerification += "  " + cpt + "  |";
+				}
+				this.logVerification += "\n\nTaille : " + message.length() + " n'est pas de la forme 2^n - 1";
             }
             else{
                 n++;

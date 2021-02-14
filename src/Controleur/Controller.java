@@ -62,9 +62,7 @@ public class Controller {
     	}
     }
 
-    public String getLogVerification(){
-       return metierVerification.getLogVerification();
-    }
+    public String getLogVerification(){ return metierVerification.getLogVerification(); }
 
     public String getLogCalculCodeH(){
         return metierCalculCodeH.getLogCalcul();
